@@ -4,7 +4,7 @@ import os.path as osp
 import sys
 sys.path.append(osp.dirname(osp.dirname(osp.abspath(__file__))))
 
-import mygpflow as gpf
+import gpflow as gpf
 from mygpflow import ekernels
 
 import numpy as np

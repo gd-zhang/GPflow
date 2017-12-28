@@ -10,7 +10,7 @@ import numpy as np
 from sklearn import cluster
 from scipy.spatial import distance
 
-import mygpflow as gpf
+import gpflow as gpf
 
 
 class DataPlaceholders(object):
