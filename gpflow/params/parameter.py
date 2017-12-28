@@ -171,14 +171,6 @@ class Parameter(object):
     def constrained_tensor(self):
         return self.value
 
-    @property
-    def value(self):
-        """
-        The `value` property is simple alias for `read_value()` method called with
-        default arguments.
-        """
-        return self._value
-
     def _build_prior(self, unconstrained_tensor, constrained_tensor):
         """
         Build a tensorflow representation of the prior density.
