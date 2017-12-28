@@ -140,7 +140,6 @@ class Parameter(object):
         # init var
         vf_value = self.transform.backward(value)
         self.vf_val = tf.get_variable(self.name, initializer=vf_value.astype(settings.float_type))
-        self._value = self.transform.forward_tensor(self.vf_val)
 
     @property
     def name(self):
@@ -148,11 +147,11 @@ class Parameter(object):
 
     @property
     def shape(self):
-        return self._value.shape
+        return self.vf_value.shape
 
     @property
     def dtype(self):
-        return self._value.dtype
+        return self.vf_value.dtype
 
     @property
     def size(self):
@@ -161,7 +160,7 @@ class Parameter(object):
 
     @property
     def value(self):
-        return self._value
+        return self.transform.forward_tensor(self.vf_val)
 
     @property
     def unconstrained_tensor(self):

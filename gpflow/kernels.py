@@ -380,7 +380,7 @@ class Stationary(Kernel):
         X2s = tf.reduce_sum(tf.square(X2), axis=1)
         dist = -2 * tf.matmul(X, X2, transpose_b=True)
         dist += tf.reshape(Xs, (-1, 1)) + tf.reshape(X2s, (1, -1))
-        return dist
+        return tf.clip_by_value(dist, 0., np.inf)
 
 
     def euclid_dist(self, X, X2):
