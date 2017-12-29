@@ -18,7 +18,7 @@ class GPLVM(GPR):
     Standard GPLVM where the likelihood can be optimised with respect to the latent X.
     """
 
-    def __init__(self, Y, latent_dim, X_mean=None, kern=None, mean_function=None, **kwargs):
+    def __init__(self, Y, latent_dim, X_mean=None, kern=None, mean_function=None, obs_var=0.1, **kwargs):
         """
         Initialise GPLVM object. This method only works with a Gaussian likelihood.
 
@@ -40,7 +40,7 @@ class GPLVM(GPR):
             raise ValueError(msg.format(latent_dim, num_latent))
         if Y.shape[1] < num_latent:
             raise ValueError('More latent dimensions than observed.')
-        GPR.__init__(self, X_mean, Y, kern, mean_function=mean_function, **kwargs)
+        GPR.__init__(self, X_mean, Y, kern, mean_function=mean_function, obs_var=obs_var, **kwargs)
         del self._X  # in GPLVM this is a Param
         with tf.variable_scope(self.name):
             self._X = Parameter(X_mean, name='X')
@@ -52,7 +52,7 @@ class GPLVM(GPR):
 
 
 class BayesianGPLVM(GPModel):
-    def __init__(self, X_mean, X_var, Y, kern, M, Z=None, X_prior_mean=None, X_prior_var=None):
+    def __init__(self, X_mean, X_var, Y, kern, M, Z=None, X_prior_mean=None, X_prior_var=None, obs_var=0.1):
         """
         Initialise Bayesian GPLVM object. This method only works with a Gaussian likelihood.
         :param X_mean: initial latent positions, size N (number of points) x Q (latent dimensions).
@@ -66,7 +66,7 @@ class BayesianGPLVM(GPModel):
         :param X_prior_var: pripor variance used in KL term of bound. By default 1.
         """
         GPModel.__init__(self, X_mean, Y, kern,
-                         likelihood=likelihoods.Gaussian(),
+                         likelihood=likelihoods.Gaussian(obs_var),
                          mean_function=Zero())
         del self.X  # in GPLVM this is a Param
         with tf.variable_scope(self.name):

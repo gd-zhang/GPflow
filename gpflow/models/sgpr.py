@@ -101,7 +101,7 @@ class SGPR(GPModel, SGPRUpperMixin):
 
     """
 
-    def __init__(self, X, Y, kern, feat=None, mean_function=None, Z=None, **kwargs):
+    def __init__(self, X, Y, kern, feat=None, mean_function=None, Z=None, obs_var=0.1, **kwargs):
         """
         X is a data matrix, size N x D
         Y is a data matrix, size N x R
@@ -110,7 +110,7 @@ class SGPR(GPModel, SGPRUpperMixin):
 
         This method only works with a Gaussian likelihood.
         """
-        likelihood = likelihoods.Gaussian()
+        likelihood = likelihoods.Gaussian(var=obs_var)
         GPModel.__init__(self, X, Y, kern, likelihood, mean_function, **kwargs)
         self.feature = features.inducingpoint_wrapper(feat, Z)
         self.num_data = X.shape[0]
@@ -188,7 +188,7 @@ class SGPR(GPModel, SGPRUpperMixin):
 
 
 class GPRFITC(GPModel, SGPRUpperMixin):
-    def __init__(self, X, Y, kern, feat=None, mean_function=None, Z=None, **kwargs):
+    def __init__(self, X, Y, kern, feat=None, mean_function=None, Z=None, obs_var=0.1, **kwargs):
         """
         This implements GP regression with the FITC approximation.
         The key reference is
@@ -216,7 +216,7 @@ class GPRFITC(GPModel, SGPRUpperMixin):
 
         mean_function = Zero() if mean_function is None else mean_function
 
-        likelihood = likelihoods.Gaussian()
+        likelihood = likelihoods.Gaussian(var=obs_var)
         GPModel.__init__(self, X, Y, kern, likelihood, mean_function, **kwargs)
         self.feature = features.inducingpoint_wrapper(feat, Z)
         self.num_data = X.shape[0]
